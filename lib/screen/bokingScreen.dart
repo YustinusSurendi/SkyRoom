@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_room/model/modelBookingRoom.dart';
 import 'package:sky_room/screen/listMyjadwalScreen.dart';
-import 'package:sky_room/screen/pembayaranScreen.dart';
 
 class BokingScreen extends StatefulWidget {
   const BokingScreen({super.key});

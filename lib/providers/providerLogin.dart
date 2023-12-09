@@ -38,4 +38,11 @@ class UserProvider with ChangeNotifier {
     _listUser.add(user);
     notifyListeners();
   }
+
+  String? _uid;
+  String? get uid => _uid;
+  void setUid(String uid) {
+    _uid = uid;
+    notifyListeners();
+  }
 }

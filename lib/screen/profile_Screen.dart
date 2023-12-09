@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sky_room/firebase_auth/auth.dart';
+import 'package:sky_room/providers/providerLogin.dart';
 import 'package:sky_room/screen/bodyWidget.dart';
 import 'package:sky_room/screen/loginScreen.dart';
 
@@ -22,6 +25,33 @@ class _MyBioState extends State<MyBio> {
   var streamController = StreamController<double>();
   XFile? image;
   double score = 0;
+
+  late String uid;
+  late Map<String, dynamic> userData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    uid = context.read<UserProvider>().uid ?? "";
+    _readData();
+  }
+
+  Future<void> _readData() async {
+    try {
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          userData = userSnapshot.data() as Map<String, dynamic>;
+        });
+      } else {
+        print('User data not found.');
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +131,9 @@ class _MyBioState extends State<MyBio> {
                       ),
                     ),
                   ),
-                  child: const TextField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Username',
-                      hintStyle: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                  child: Text(
+                    'Username: ${userData['firstName']} ${userData['lastName']}', // Isi dengan nama pengguna dari Firestore
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ],
@@ -130,15 +154,25 @@ class _MyBioState extends State<MyBio> {
                       ),
                     ),
                   ),
-                  child: const TextField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Email',
-                      hintStyle: TextStyle(
+                  child: Text(
+                    'Email: ${userData['email']}', // Isi dengan email dari Firestore
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
                         color: Colors.white,
+                        width: 1.0,
                       ),
                     ),
+                  ),
+                  child: Text(
+                    'Role: ${userData['role']}', // Isi dengan email dari Firestore
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ],

@@ -1,7 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sky_room/firebase_auth/auth.dart';
+import 'package:sky_room/providers/providerLogin.dart';
 import 'package:sky_room/screen/homeScreen.dart';
 import 'package:sky_room/screen/regisScreen.dart';
 
@@ -24,25 +27,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignIn() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final email = _inputEmail.text;
     final password = _inputPassword.text;
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      final authResult = await auth.login(email, password);
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      if (authResult != null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Login Berhasil'),
-          backgroundColor: Colors.green,
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Email atau password salah!!'),
-          backgroundColor: Colors.red,
-        ));
-      }
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUid(userCredential.user!.uid);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Login Berhasil'),
+        backgroundColor: Colors.green,
+      ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

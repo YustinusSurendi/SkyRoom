@@ -23,9 +23,7 @@ class _MyBodyWidgetState extends State<MyBodyWidget> {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       score = (prefs.getDouble(_keyScore) ?? 0);
-      if (widget.image == null) {
-        widget.image = prefs.getString(_keyImage);
-      }
+      widget.image ??= prefs.getString(_keyImage);
     });
   }
 
