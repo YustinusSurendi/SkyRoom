@@ -135,7 +135,7 @@ class _BokingScreenState extends State<BokingScreen> {
                   ],
                 ),
               ),
-              for (var hotel in details)
+              for (var hotel in filteredDetails)
                 Column(children: [
                   Card(
                     margin: const EdgeInsets.only(top: 30),
