@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/providers/providerjadwal.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_room/providers/providerjadwal.dart';
 
 class ScreenListJadwal extends StatefulWidget {
   const ScreenListJadwal({super.key});
@@ -27,8 +27,7 @@ class _ScreenListJadwalState extends State<ScreenListJadwal> {
                     color: Colors.white,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        20),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   filled: true,
                   fillColor: Colors.grey,
@@ -65,10 +64,10 @@ class _ScreenListJadwalState extends State<ScreenListJadwal> {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40),
                 child: Row(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.collections_bookmark,
                       color: Colors.white,
@@ -101,7 +100,7 @@ class _ScreenListJadwalState extends State<ScreenListJadwal> {
                                 borderRadius: BorderRadius.circular(20),
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage('${data.gambar}'))),
+                                    image: AssetImage(data.gambar))),
                           )),
                           Expanded(
                             child: Column(
@@ -109,7 +108,7 @@ class _ScreenListJadwalState extends State<ScreenListJadwal> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${data.room_hotel}',
+                                  data.room_hotel,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -121,7 +120,7 @@ class _ScreenListJadwalState extends State<ScreenListJadwal> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
-                                    '${data.date}',
+                                    data.date,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),

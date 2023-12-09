@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/screen/about_us.dart';
-import 'package:project_heimdall/screen/fasilitasScreen.dart';
-import 'package:project_heimdall/screen/bokingScreen.dart';
-import 'package:project_heimdall/screen/messengerScreen.dart';
-import 'package:project_heimdall/screen/profile_Screen.dart';
+import 'package:sky_room/screen/about_us.dart';
+import 'package:sky_room/screen/bokingScreen.dart';
+import 'package:sky_room/screen/fasilitasScreen.dart';
+import 'package:sky_room/screen/messengerScreen.dart';
+import 'package:sky_room/screen/profile_Screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,14 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 120, bottom: 90),
+                const Padding(
+                  padding: EdgeInsets.only(top: 120, bottom: 90),
                   child: Column(
-                    children: const [
+                    children: [
                       Text(
                         'SkyRoom',
                         style: TextStyle(
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        color: const Color(0xFFFFFF1),
+                        color: const Color(0x0ffffff1),
                         elevation: 10,
                         child: Padding(
                           padding: const EdgeInsets.all(10),
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        color: const Color(0xFFFFFF1),
+                        color: const Color(0x0ffffff1),
                         elevation: 10,
                         child: Padding(
                           padding: const EdgeInsets.all(10),
@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        color: const Color(0xFFFFFF1),
+                        color: const Color(0x0ffffff1),
                         elevation: 10,
                         child: Padding(
                           padding: const EdgeInsets.all(10),

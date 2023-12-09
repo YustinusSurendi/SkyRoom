@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/data.dart';
-import 'package:project_heimdall/screen/listMyjadwalScreen.dart';
+import 'package:sky_room/data.dart';
+import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class FasilitasScreen extends StatefulWidget {
   const FasilitasScreen({super.key});
@@ -67,10 +67,10 @@ class _FasilitasScreenState extends State<FasilitasScreen> {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40),
                 child: Row(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.home_work_outlined,
                       color: Colors.white,

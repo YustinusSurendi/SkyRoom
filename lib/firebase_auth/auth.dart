@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class AuthFirebase {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -24,7 +23,7 @@ class AuthFirebase {
   }
 
   Future<User?> getUser() async {
-    User? user = await _firebaseAuth.currentUser;
+    User? user = _firebaseAuth.currentUser;
     return user;
   }
 

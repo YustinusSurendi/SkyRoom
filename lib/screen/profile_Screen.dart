@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project_heimdall/screen/bodyWidget.dart';
-import 'package:project_heimdall/screen/loginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:project_heimdall/firebase_auth/auth.dart';
+import 'package:sky_room/firebase_auth/auth.dart';
+import 'package:sky_room/screen/bodyWidget.dart';
+import 'package:sky_room/screen/loginScreen.dart';
 
 class MyBio extends StatefulWidget {
   const MyBio({Key? key}) : super(key: key);
@@ -158,7 +158,7 @@ class _MyBioState extends State<MyBio> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                                builder: (context) => const LoginScreen()));
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text('Berhasi Sign Out'),
@@ -177,16 +177,15 @@ class _MyBioState extends State<MyBio> {
                     });
                   });
                 },
-                child: const Text(
-                  'Logout',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 18),
-                ),
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    primary: Colors.red),
+                    backgroundColor: Colors.red),
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
               ),
             ),
           ),
@@ -195,10 +194,11 @@ class _MyBioState extends State<MyBio> {
 
   Future<void> _setImage(String? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (value != null)
+    if (value != null) {
       setState(() {
         prefs.setString(_keyImage, value);
       });
+    }
   }
 
   Future<void> _setScore(double value) async {

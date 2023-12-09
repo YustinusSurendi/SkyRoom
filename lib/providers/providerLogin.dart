@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/model/modelLogin.dart';
+import 'package:sky_room/model/modelLogin.dart';
 
 class UserProvider with ChangeNotifier {
-  List<ModelUser> _listUser = [
-    ModelUser(
-        email: 'alvannisdamai@gmail.com', password: 'alvannis')
+  final List<ModelUser> _listUser = [
+    ModelUser(email: 'alvannisdamai@gmail.com', password: 'alvannis')
   ];
 
   List<ModelUser> get allUser => _listUser;
@@ -21,13 +20,11 @@ class UserProvider with ChangeNotifier {
     username,
     email,
   ) {
-    return _listUser
-        .firstWhere((user) =>  user.email == email);
+    return _listUser.firstWhere((user) => user.email == email);
   }
 
   void update(emailUser, ModelUser newData) {
-    final index = _listUser.indexWhere(
-        (user) => user.email == emailUser);
+    final index = _listUser.indexWhere((user) => user.email == emailUser);
     if (index >= 0) {
       _listUser[index] = newData;
       notifyListeners();

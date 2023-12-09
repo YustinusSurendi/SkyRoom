@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/providers/providerLogin.dart';
-import 'package:project_heimdall/screen/loginScreen.dart';
-import 'package:project_heimdall/firebase_auth/auth.dart';
-import 'package:provider/provider.dart';
+import 'package:sky_room/firebase_auth/auth.dart';
+import 'package:sky_room/screen/loginScreen.dart';
 
 class RegisScreen extends StatefulWidget {
   const RegisScreen({super.key});
@@ -14,8 +12,8 @@ class RegisScreen extends StatefulWidget {
 class _RegisScreenState extends State<RegisScreen> {
   late AuthFirebase auth;
 
-  TextEditingController _inputEmail = TextEditingController();
-  TextEditingController _inputPassword = TextEditingController();
+  final TextEditingController _inputEmail = TextEditingController();
+  final TextEditingController _inputPassword = TextEditingController();
 
   @override
   void initState() {
@@ -23,7 +21,6 @@ class _RegisScreenState extends State<RegisScreen> {
     auth = AuthFirebase();
   }
 
-  @override
   void _handleSignUp() async {
     final email = _inputEmail.text;
     final password = _inputPassword.text;
@@ -52,9 +49,8 @@ class _RegisScreenState extends State<RegisScreen> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
-    final loginProv = Provider.of<UserProvider>(context);
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
@@ -64,10 +60,10 @@ class _RegisScreenState extends State<RegisScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 120, bottom: 20),
+              const Padding(
+                padding: EdgeInsets.only(top: 120, bottom: 20),
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
                       'Register',
                       style: TextStyle(
@@ -150,20 +146,20 @@ class _RegisScreenState extends State<RegisScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Container(
+                child: SizedBox(
                   width: 150,
                   height: 40,
                   child: ElevatedButton(
                     onPressed: _handleSignUp,
-                    child: const Text(
-                      'Sign Up',
-                      style: TextStyle(fontSize: 18),
-                    ),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),
@@ -177,7 +173,10 @@ class _RegisScreenState extends State<RegisScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                     InkWell(
-                      onTap: () => Navigator.of(context).pop(),
+                      onTap: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen())),
                       child: const Text(
                         'Sign In',
                         style: TextStyle(color: Colors.blue),

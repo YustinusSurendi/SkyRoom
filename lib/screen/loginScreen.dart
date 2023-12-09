@@ -1,9 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/providers/providerLogin.dart';
-import 'package:project_heimdall/screen/homeScreen.dart';
-import 'package:project_heimdall/screen/regisScreen.dart';
-import 'package:provider/provider.dart';
-import 'package:project_heimdall/firebase_auth/auth.dart';
+import 'package:sky_room/firebase_auth/auth.dart';
+import 'package:sky_room/screen/homeScreen.dart';
+import 'package:sky_room/screen/regisScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
     auth = AuthFirebase();
   }
 
-  @override
   void _handleSignIn() async {
     final email = _inputEmail.text;
     final password = _inputPassword.text;
@@ -54,8 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
-    final loginProv = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
@@ -65,10 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 120, bottom: 90),
+              const Padding(
+                padding: EdgeInsets.only(top: 120, bottom: 90),
                 child: Column(
-                  children: const [
+                  children: [
                     Text(
                       'SkyRoom',
                       style: TextStyle(
@@ -152,42 +151,40 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 90),
-                child: Container(
+                child: SizedBox(
                   width: 150,
                   height: 40,
                   child: ElevatedButton(
                     onPressed: _handleSignIn,
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(fontSize: 18),
-                    ),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text(
+                      'Sign In',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ),
                 ),
               ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Belum Punya Akun? ',
-                      style: TextStyle(color: Colors.white),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Belum Punya Akun? ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  InkWell(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const RegisScreen())),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.blue),
                     ),
-                    InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const RegisScreen())),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               )
             ],
           ),

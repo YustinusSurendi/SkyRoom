@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/screen/buatJadwal.dart';
-import 'package:project_heimdall/screen/listMyjadwalScreen.dart';
+import 'package:sky_room/screen/buatJadwal.dart';
+import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class PembayaranScreen extends StatefulWidget {
   final data;
@@ -67,8 +67,8 @@ class _PembayaranScreenState extends State<PembayaranScreen> {
         padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
         child: Column(
           children: [
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(
                   Icons.collections_bookmark,
                   color: Colors.white,
@@ -139,13 +139,15 @@ class _PembayaranScreenState extends State<PembayaranScreen> {
               children: [
                 Expanded(
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.grey),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey),
                         onPressed: () {},
                         child: Text('Rp ${widget.data['harga']}'))),
-                Container(
+                SizedBox(
                     width: 140,
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.red),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,

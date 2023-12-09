@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/screen/listMyjadwalScreen.dart';
+import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class MessegerScreen extends StatefulWidget {
   const MessegerScreen({super.key});
@@ -9,8 +9,8 @@ class MessegerScreen extends StatefulWidget {
 }
 
 class _MessegerScreenState extends State<MessegerScreen> {
-  TextEditingController _inputMsgcontroller = TextEditingController();
-  List<Map<String, dynamic>> _conversation = [
+  final TextEditingController _inputMsgcontroller = TextEditingController();
+  final List<Map<String, dynamic>> _conversation = [
     {'text': 'Tanya kan Masalah booking disini', 'isUser': false}
   ];
   @override
@@ -29,8 +29,7 @@ class _MessegerScreenState extends State<MessegerScreen> {
                     color: Colors.white,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        20), 
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   filled: true,
                   fillColor: Colors.grey,
@@ -52,8 +51,8 @@ class _MessegerScreenState extends State<MessegerScreen> {
               ),
             ),
             InkWell(
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ScreenListJadwal())),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ScreenListJadwal())),
               child: Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const Icon(
@@ -70,10 +69,10 @@ class _MessegerScreenState extends State<MessegerScreen> {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 40),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 40),
               child: Row(
-                children: const [
+                children: [
                   Icon(
                     Icons.message,
                     color: Colors.white,
@@ -154,8 +153,8 @@ class _MessegerScreenState extends State<MessegerScreen> {
                         hintStyle: const TextStyle(
                           color: Colors.white,
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
                       ),
                     ),
                   ),

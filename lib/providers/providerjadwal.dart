@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/model/modelJadwal.dart';
-import 'package:project_heimdall/model/modelLogin.dart';
+import 'package:sky_room/model/modelJadwal.dart';
 
 class JadwalProvider with ChangeNotifier {
-  List<ModelJadwal> _listJadwal = [];
+  final List<ModelJadwal> _listJadwal = [];
 
   List<ModelJadwal> get allJadwal => _listJadwal;
 

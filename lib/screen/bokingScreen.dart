@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_heimdall/data.dart';
-import 'package:project_heimdall/screen/listMyjadwalScreen.dart';
-import 'package:project_heimdall/screen/pembayaranScreen.dart';
+import 'package:sky_room/model/modelBookingRoom.dart';
+import 'package:sky_room/screen/listMyjadwalScreen.dart';
+import 'package:sky_room/screen/pembayaranScreen.dart';
 
 class BokingScreen extends StatefulWidget {
   const BokingScreen({super.key});
@@ -11,6 +13,47 @@ class BokingScreen extends StatefulWidget {
 }
 
 class _BokingScreenState extends State<BokingScreen> {
+  TextEditingController searchcontroller = TextEditingController();
+  List<EventModel> details = [];
+  late List<EventModel> filteredDetails = [];
+  @override
+  void initState() {
+    super.initState();
+    readData();
+  }
+
+  Future<void> readData() async {
+    await Firebase.initializeApp();
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    var data = await db.collection('hotel_list').get();
+    setState(() {
+      details =
+          data.docs.map((doc) => EventModel.fromDocSnapshot(doc)).toList();
+      filteredDetails =
+          details; // Initialize filteredDetails with all data initially
+    });
+  }
+
+  void filterSearchResults(String query) {
+    List<EventModel> searchList = [];
+    searchList.addAll(details);
+    if (query.isNotEmpty) {
+      List<EventModel> filteredList = [];
+      for (var item in searchList) {
+        if (item.namahotel.toLowerCase().contains(query.toLowerCase())) {
+          filteredList.add(item);
+        }
+      }
+      setState(() {
+        filteredDetails = filteredList;
+      });
+    } else {
+      setState(() {
+        filteredDetails = details;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +64,10 @@ class _BokingScreenState extends State<BokingScreen> {
           children: [
             Expanded(
               child: TextField(
+                onChanged: (value) {
+                  filterSearchResults(value);
+                },
+                controller: searchcontroller,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
                     Icons.search,
@@ -31,7 +78,7 @@ class _BokingScreenState extends State<BokingScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey,
-                  hintText: 'Cari Pin Anda',
+                  hintText: 'search hotel',
                   hintStyle: const TextStyle(
                     color: Colors.white,
                   ),
@@ -49,8 +96,8 @@ class _BokingScreenState extends State<BokingScreen> {
               ),
             ),
             InkWell(
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ScreenListJadwal())),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ScreenListJadwal())),
               child: Container(
                 margin: const EdgeInsets.only(left: 20),
                 child: const Icon(
@@ -68,10 +115,10 @@ class _BokingScreenState extends State<BokingScreen> {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40),
                 child: Row(
-                  children: const [
+                  children: [
                     Icon(
                       Icons.collections_bookmark,
                       color: Colors.white,
@@ -88,11 +135,11 @@ class _BokingScreenState extends State<BokingScreen> {
                   ],
                 ),
               ),
-              Column(
-                children: roomList.map((data) {
-                  return Card(
+              for (var hotel in details)
+                Column(children: [
+                  Card(
                     margin: const EdgeInsets.only(top: 30),
-                    color: Color(0xFFFFFF1),
+                    color: const Color(0x0ffffff1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -107,12 +154,12 @@ class _BokingScreenState extends State<BokingScreen> {
                                 topLeft: Radius.circular(20)),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: AssetImage('${data['gambar']}'),
+                              image: NetworkImage(hotel.gambarhotel),
                             ),
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           child: Row(
                             children: [
                               Expanded(
@@ -120,7 +167,7 @@ class _BokingScreenState extends State<BokingScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${data['nama']}',
+                                      hotel.namahotel,
                                       style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -129,7 +176,7 @@ class _BokingScreenState extends State<BokingScreen> {
                                     Row(
                                       children: [
                                         Text(
-                                          'Rp ${data['harga']} ',
+                                          'Rp ${hotel.hargahotel} ',
                                           style: const TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
@@ -146,37 +193,32 @@ class _BokingScreenState extends State<BokingScreen> {
                                   ],
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 height: 40,
                                 width: 100,
                                 child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                        ),
-                                        primary: Colors.red),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PembayaranScreen(
-                                                      data: data)));
-                                    },
-                                    child: const Text(
-                                      'Booking',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  onPressed: () {},
+                                  child: const Text(
+                                    'Booking',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         )
                       ],
                     ),
-                  );
-                }).toList(),
-              )
+                  )
+                ]),
             ],
           ),
         ),

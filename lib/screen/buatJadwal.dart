@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:project_heimdall/model/modelJadwal.dart';
-import 'package:project_heimdall/providers/providerLogin.dart';
-import 'package:project_heimdall/providers/providerjadwal.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_room/model/modelJadwal.dart';
+import 'package:sky_room/providers/providerLogin.dart';
+import 'package:sky_room/providers/providerjadwal.dart';
 
 SnackBar createSnackBar(String text, Color color, String label) {
   return SnackBar(
@@ -67,20 +67,21 @@ class _BuatJadwalScreenState extends State<BuatJadwalScreen> {
           ],
         ),
       ),
-      Spacer(),
+      const Spacer(),
       Row(
         children: [
-          Container(
+          SizedBox(
               width: 140,
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                   child: const Text('Batal'))),
           Expanded(
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.green),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
                   onPressed: () {
                     final snackBar = createSnackBar(
                         'Ruangan Berhasil Dibooking', Colors.green, 'Oke');
