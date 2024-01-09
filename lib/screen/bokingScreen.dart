@@ -28,8 +28,7 @@ class _BokingScreenState extends State<BokingScreen> {
     setState(() {
       details =
           data.docs.map((doc) => EventModel.fromDocSnapshot(doc)).toList();
-      filteredDetails =
-          details; // Initialize filteredDetails with all data initially
+      filteredDetails = details;
     });
   }
 
@@ -204,7 +203,7 @@ class _BokingScreenState extends State<BokingScreen> {
                                   ),
                                   onPressed: () {},
                                   child: const Text(
-                                    'Booking',
+                                    'Details',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
