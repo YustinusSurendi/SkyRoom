@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_room/model/modelBookingRoom.dart';
+import 'package:sky_room/screen/detailScreen.dart';
 import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class BokingScreen extends StatefulWidget {
@@ -192,24 +193,31 @@ class _BokingScreenState extends State<BokingScreen> {
                                 ),
                               ),
                               SizedBox(
-                                height: 40,
-                                width: 100,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                  height: 40,
+                                  width: 100,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      backgroundColor: Colors.red,
                                     ),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Details',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailRoom(
+                                            hotel: hotel,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Details',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
+                                  ))
                             ],
                           ),
                         )
