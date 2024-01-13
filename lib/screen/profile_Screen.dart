@@ -9,6 +9,7 @@ import 'package:sky_room/firebase_auth/auth.dart';
 import 'package:sky_room/providers/providerLogin.dart';
 import 'package:sky_room/screen/loginScreen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MyBio extends StatefulWidget {
   const MyBio({Key? key}) : super(key: key);
@@ -41,6 +42,45 @@ class _MyBioState extends State<MyBio> {
       await _uploadData();
     } else {
       print('User canceled image picking');
+    }
+  }
+
+  Future<void> _showImagePickerOptions() async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.camera),
+              title: const Text('Camera'),
+              onTap: () async {
+                Navigator.pop(context);
+                await _checkCameraPermissionAndPickImage();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _checkCameraPermissionAndPickImage() async {
+    PermissionStatus status = await Permission.camera.request();
+
+    if (status == PermissionStatus.granted) {
+      await _pickImage(ImageSource.camera);
+    } else {
+      print('Camera permission denied');
     }
   }
 
@@ -122,11 +162,12 @@ class _MyBioState extends State<MyBio> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: () async {
-                    await _pickImage(ImageSource.gallery);
-                    await _readData();
-                  },
-                  child: const Text("Upload Photo")),
+                onPressed: () async {
+                  await _showImagePickerOptions();
+                  await _readData();
+                },
+                child: const Text("Upload Photo"),
+              ),
               IconButton(
                   onPressed: () async {
                     await _deleteProfilePicture();
