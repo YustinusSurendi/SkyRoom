@@ -38,7 +38,7 @@ class _MyBioState extends State<MyBio> {
       setState(() {
         _image = File(pickedFile.path);
       });
-      await _uploadData(); // Memindahkan pemanggilan _uploadData ke sini
+      await _uploadData();
     } else {
       print('User canceled image picking');
     }
@@ -145,14 +145,12 @@ class _MyBioState extends State<MyBio> {
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        // color: Colors.white,
                         width: 1.0,
                       ),
                     ),
                   ),
                   child: Text(
-                    'Username: ${userData['firstName']} ${userData['lastName']}', // Isi dengan nama pengguna dari Firestore
-                    // style: const TextStyle(color: Colors.white),
+                    'Username: ${userData['firstName']} ${userData['lastName']}',
                   ),
                 ),
               ],
@@ -168,30 +166,12 @@ class _MyBioState extends State<MyBio> {
                   decoration: const BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        // color: Colors.white,
                         width: 1.0,
                       ),
                     ),
                   ),
                   child: Text(
-                    'Email: ${userData['email']}', // Isi dengan email dari Firestore
-                    // style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        // color: Colors.white,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Role: ${userData['role']}', // Isi dengan email dari Firestore
-                    // style: const TextStyle(color: Colors.white),
+                    'Email: ${userData['email']}',
                   ),
                 ),
               ],
@@ -205,7 +185,6 @@ class _MyBioState extends State<MyBio> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    // auth.signOut();
                     AuthFirebase().signOut().then((result) {
                       if (result == null) {
                         Navigator.pushReplacement(
