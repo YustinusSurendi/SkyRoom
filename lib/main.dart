@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_room/providers/providerLogin.dart';
 import 'package:sky_room/providers/providerjadwal.dart';
-import 'package:sky_room/screen/regisScreen.dart';
+import 'package:sky_room/screen/loginScreen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  MobileAds.instance.initialize();
   runApp(const MyApp());
   runApp(MultiProvider(
     providers: [
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const RegisScreen(),
+      home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -4,6 +4,7 @@ import 'package:sky_room/screen/bokingScreen.dart';
 import 'package:sky_room/screen/fasilitasScreen.dart';
 import 'package:sky_room/screen/messengerScreen.dart';
 import 'package:sky_room/screen/profile_Screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +14,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late InterstitialAd _interstitialAd;
+  bool _isInterstitialReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstisialAdd();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -195,8 +205,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const BokingScreen())),
+                      onTap: () {
+                        _loadInterstisialAdd();
+                        if (_isInterstitialReady) {
+                          _interstitialAd.show();
+                        }
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const BokingScreen()));
+                      },
                       child: Card(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         shape: RoundedRectangleBorder(
@@ -256,6 +272,26 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  void _loadInterstisialAdd() {
+    InterstitialAd.load(
+        adUnitId: "ca-app-pub-3940256099942544/1033173712",
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              print("Close Interstitial Add");
+            },
+          );
+          setState(() {
+            _isInterstitialReady = true;
+            _interstitialAd = ad;
+          });
+        }, onAdFailedToLoad: (err) {
+          _isInterstitialReady = false;
+          _interstitialAd.dispose();
+        }));
+  }
 }
 
 showMenuButton(BuildContext context) {
@@ -273,7 +309,17 @@ showMenuButton(BuildContext context) {
                   MaterialPageRoute(builder: (context) => const AboutUs()));
             },
             child: const Text("About Us"),
-          ))
+          )),
+          // PopupMenuItem(
+          //     child: InkWell(
+          //   onTap: () {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => const Settingsscreen()));
+          //   },
+          //   child: const Text("Settings"),
+          // )),
         ];
       });
 }

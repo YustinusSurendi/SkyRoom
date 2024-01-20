@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_room/model/modelBookingRoom.dart';
-import 'package:sky_room/screen/detailScreen.dart';
+import 'package:sky_room/screen/bookingdetailScreen.dart';
 import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class BokingScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _BokingScreenState extends State<BokingScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.grey,
-                  hintText: 'search hotel',
+                  hintText: 'search',
                   hintStyle: const TextStyle(
                     color: Colors.white,
                   ),
@@ -182,7 +182,7 @@ class _BokingScreenState extends State<BokingScreen> {
                                               color: Colors.white),
                                         ),
                                         const Text(
-                                          ' / Hari',
+                                          ' / Day',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16),

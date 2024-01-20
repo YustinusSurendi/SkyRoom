@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -134,13 +135,78 @@ class _MyBioState extends State<MyBio> {
     }
   }
 
+  Future<void> _editUsername() async {
+    String newUsername = userData['firstName'] ?? "";
+    await showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+        child: AlertDialog(
+          backgroundColor: Colors.transparent,
+          title: const Text(
+            'Edit your username',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: TextField(
+            autofocus: true,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+              hintText: 'Enter new username',
+              hintStyle: TextStyle(color: Colors.grey),
+            ),
+            onChanged: (value) {
+              newUsername = value;
+            },
+          ),
+          actions: [
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await _updateUsername(newUsername);
+                    },
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _updateUsername(String newUsername) async {
+    if (newUsername.trim().isNotEmpty) {
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'firstName': newUsername,
+      });
+      await _readData();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Profile"),
-        ),
-        body: Column(children: [
+      appBar: AppBar(
+        title: const Text("Profile"),
+      ),
+      body: Column(
+        children: [
           if (userData['profilefoto'] != null)
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -169,11 +235,12 @@ class _MyBioState extends State<MyBio> {
                 child: const Text("Upload Photo"),
               ),
               IconButton(
-                  onPressed: () async {
-                    await _deleteProfilePicture();
-                    await _readData();
-                  },
-                  icon: const Icon(Icons.delete))
+                onPressed: () async {
+                  await _deleteProfilePicture();
+                  await _readData();
+                },
+                icon: const Icon(Icons.delete),
+              )
             ],
           ),
           Padding(
@@ -190,8 +257,17 @@ class _MyBioState extends State<MyBio> {
                       ),
                     ),
                   ),
-                  child: Text(
-                    'Username: ${userData['firstName']} ${userData['lastName']}',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Username: ${userData['firstName']}',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: _editUsername,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -229,32 +305,37 @@ class _MyBioState extends State<MyBio> {
                     AuthFirebase().signOut().then((result) {
                       if (result == null) {
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()));
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('Berhasi Sign Out'),
-                          backgroundColor: Colors.green,
-                        ));
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(
-                            'Berhasil Sign Out',
-                            style: TextStyle(fontSize: 16),
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
                           ),
-                          backgroundColor: Colors.green,
-                        ));
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Berhasi Sign Out'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Berhasil Sign Out',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
                       }
                     });
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    backgroundColor: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
                 child: const Text(
                   'Logout',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -262,6 +343,8 @@ class _MyBioState extends State<MyBio> {
               ),
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }
