@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
+
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseAuth.currentUser?.uid)
+            .get();
+        setState(() {
+          var userData = userSnapshot.data() as Map<String, dynamic>;
+          context.read<UserProvider>().setUsername(userData['firstName']);
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Login Berhasil'),
