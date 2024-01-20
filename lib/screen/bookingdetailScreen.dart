@@ -85,8 +85,6 @@ class _DetailRoomState extends State<DetailRoom> {
                 ],
               ),
             ),
-
-            // Review section
             const SizedBox(height: 20),
             const Text(
               'Penilaian dan Komentar:',
@@ -96,8 +94,6 @@ class _DetailRoomState extends State<DetailRoom> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Display existing reviews
             StreamBuilder(
               stream: reviewsCollection
                   .where('hotelId', isEqualTo: widget.hotel.id)
@@ -136,10 +132,7 @@ class _DetailRoomState extends State<DetailRoom> {
                 );
               },
             ),
-
-            // Add a review form
             const SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: () {
                 _showRatingForm(context);
@@ -158,15 +151,11 @@ class _DetailRoomState extends State<DetailRoom> {
       builder: (BuildContext context) {
         return RatingDialog(
           title: const Text('Beri Penilaian'),
-          // add your custom icon or image assets here
-
           submitButtonText: 'Submit Review',
           onSubmitted: (response) async {
-            // Get the current user
             User? currentUser = FirebaseAuth.instance.currentUser;
 
             if (currentUser != null) {
-              // Create a review object
               HotelReview newReview = HotelReview(
                 userId: currentUser.uid,
                 userName: context.read<UserProvider>().username ?? 'Anonymous',
@@ -175,16 +164,10 @@ class _DetailRoomState extends State<DetailRoom> {
                 hotelId: widget.hotel.id,
               );
 
-              // Save the review to Firestore
               await reviewsCollection.add(newReview.toMap());
-
-              // Refresh the UI
               setState(() {});
-
-              // Show success notification
               widget.notip.showPesanNotif('SkyRoom', 'Review Submitted');
             } else {
-              // If somehow the user is not authenticated
               widget.notip.showPesanNotif('SkyRoom', 'User not authenticated');
             }
           },
