@@ -30,47 +30,63 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignIn() async {
-    setState(() {
-      _isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final email = _inputEmail.text;
     final password = _inputPassword.text;
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      UserCredential userCredential =
-          await firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      try {
+        UserCredential userCredential =
+            await firebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUid(userCredential.user!.uid);
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUid(userCredential.user!.uid);
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
 
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(firebaseAuth.currentUser?.uid)
-          .get();
-      setState(() {
-        userData = userSnapshot.data() as Map<String, dynamic>;
-      });
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseAuth.currentUser?.uid)
+            .get();
 
-      context.read<UserProvider>().setUsername(userData['firstName']);
+        if (mounted) {
+          setState(() {
+            userData = userSnapshot.data() as Map<String, dynamic>;
+          });
+        }
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Login Berhasil'),
-        backgroundColor: Colors.green,
-      ));
+        context.read<UserProvider>().setUsername(userData['firstName']);
 
-      setState(() {
-        _isLoading = false;
-      });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Login Berhasil'),
+          backgroundColor: Colors.green,
+        ));
+
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } catch (error) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+        print('Login error: $error');
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -78,9 +94,11 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.red,
         ),
       );
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
