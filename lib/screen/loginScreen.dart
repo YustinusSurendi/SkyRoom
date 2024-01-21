@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _inputEmail = TextEditingController();
   final TextEditingController _inputPassword = TextEditingController();
   bool _isLoading = false;
+  late Map<String, dynamic> userData = {};
 
   @override
   void initState() {
@@ -56,8 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
           .collection('users')
           .doc(firebaseAuth.currentUser?.uid)
           .get();
+      setState(() {
+        userData = userSnapshot.data() as Map<String, dynamic>;
+      });
 
-      var userData = userSnapshot.data() as Map<String, dynamic>;
       context.read<UserProvider>().setUsername(userData['firstName']);
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
