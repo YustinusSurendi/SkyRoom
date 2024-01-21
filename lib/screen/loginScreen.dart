@@ -56,10 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
           .collection('users')
           .doc(firebaseAuth.currentUser?.uid)
           .get();
-      setState(() {
-        var userData = userSnapshot.data() as Map<String, dynamic>;
-        context.read<UserProvider>().setUsername(userData['firstName']);
-      });
+
+      var userData = userSnapshot.data() as Map<String, dynamic>;
+      context.read<UserProvider>().setUsername(userData['firstName']);
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Login Berhasil'),
