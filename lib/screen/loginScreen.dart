@@ -38,46 +38,37 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _inputPassword.text;
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      try {
-        UserCredential userCredential =
-            await firebaseAuth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-        final userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUid(userCredential.user!.uid);
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUid(userCredential.user!.uid);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
 
-        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(firebaseAuth.currentUser?.uid)
-            .get();
-        setState(() {
-          var userData = userSnapshot.data() as Map<String, dynamic>;
-          context.read<UserProvider>().setUsername(userData['firstName']);
-        });
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseAuth.currentUser?.uid)
+          .get();
+      setState(() {
+        var userData = userSnapshot.data() as Map<String, dynamic>;
+        context.read<UserProvider>().setUsername(userData['firstName']);
+      });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Login Berhasil'),
-          backgroundColor: Colors.green,
-        ));
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login Gagal: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Login Berhasil'),
+        backgroundColor: Colors.green,
+      ));
+
+      setState(() {
+        _isLoading = false;
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
