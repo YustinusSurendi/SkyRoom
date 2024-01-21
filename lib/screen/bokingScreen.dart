@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sky_room/model/modelBookingRoom.dart';
+import 'package:sky_room/providers/providerLogin.dart';
 import 'package:sky_room/screen/bookingdetailScreen.dart';
+import 'package:sky_room/screen/favorite_hotel.dart';
 import 'package:sky_room/screen/listMyjadwalScreen.dart';
 
 class BokingScreen extends StatefulWidget {
@@ -16,10 +19,60 @@ class _BokingScreenState extends State<BokingScreen> {
   TextEditingController searchcontroller = TextEditingController();
   List<EventModel> details = [];
   late List<EventModel> filteredDetails = [];
+  List<EventModel> favoriteHotels = [];
+  Map<String, bool> favoriteStatus = {}; // Track favorite status locally
   @override
   void initState() {
     super.initState();
     readData();
+    readUserFavorites();
+  }
+
+  Future<void> addToFavorites(String hotelId) async {
+    final userId = context.read<UserProvider>().uid ?? "";
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'favoriteHotels': FieldValue.arrayUnion([hotelId]),
+      });
+    } catch (error) {
+      print('Error adding to favorites: $error');
+    }
+  }
+
+  Future<void> removeFromFavorites(String hotelId) async {
+    final userId = context.read<UserProvider>().uid ?? "";
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'favoriteHotels': FieldValue.arrayRemove([hotelId]),
+      });
+    } catch (error) {
+      print('Error removing from favorites: $error');
+    }
+  }
+
+  Future<void> readUserFavorites() async {
+    final userId = context.read<UserProvider>().uid ?? "";
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (userSnapshot.exists) {
+        List<String> favorites =
+            (userSnapshot['favoriteHotels'] as List<dynamic>?)
+                    ?.map((dynamic e) => e.toString())
+                    .toList() ??
+                [];
+
+        setState(() {
+          favoriteHotels =
+              details.where((hotel) => favorites.contains(hotel.id)).toList();
+        });
+      }
+    } catch (error) {
+      print('Error fetching user favorites: $error');
+    }
   }
 
   Future<void> readData() async {
@@ -88,10 +141,18 @@ class _BokingScreenState extends State<BokingScreen> {
             ),
             Container(
               margin: const EdgeInsets.only(left: 20),
-              child: const Icon(
-                Icons.notifications,
-                color: Colors.white,
-                size: 30,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                  size: 35,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FavoriteHotelScreen()));
+                },
               ),
             ),
             InkWell(
@@ -182,7 +243,7 @@ class _BokingScreenState extends State<BokingScreen> {
                                               color: Colors.white),
                                         ),
                                         const Text(
-                                          ' / Day',
+                                          ' /Night',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16),
@@ -190,6 +251,26 @@ class _BokingScreenState extends State<BokingScreen> {
                                       ],
                                     ),
                                   ],
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    if (favoriteHotels.contains(hotel)) {
+                                      favoriteHotels.remove(hotel);
+                                      removeFromFavorites(hotel.id);
+                                    } else {
+                                      favoriteHotels.add(hotel);
+                                      addToFavorites(hotel.id);
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  favoriteHotels.contains(hotel)
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color: Colors.yellow,
+                                  size: 30,
                                 ),
                               ),
                               SizedBox(
